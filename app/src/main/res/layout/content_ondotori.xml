@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/content_ondotori_layout">
+
+    <TextView
+        android:id="@+id/ondotori_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Headline"
+        android:text="@string/ondotori"
+        android:background="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"/>
+    <View android:layout_width="200dp"
+        android:layout_height="10dp"
+        android:background="@color/dark_blue"/>
+    <View android:layout_width="150dp"
+        android:layout_height="7dp"
+        android:background="@color/soft_blue" />
+    <TableLayout
+        android:id="@+id/ondotori_table"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/background_with_shadow">
+    </TableLayout>
+    <TableLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+        <TableRow>
+            <ImageView
+                android:id="@+id/ondotori_scale"
+                android:layout_height="wrap_content"
+                android:src="@drawable/temp_color_chart"
+                android:layout_span="3" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="min"
+                android:id="@+id/ondotori_min_scale"
+                android:layout_gravity="left"
+                android:textSize="8dp"/>
+            <View android:layout_width="50dp"
+                android:layout_height="match_parent" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="max"
+                android:id="@+id/ondotori_max_scale"
+                android:layout_gravity="right"
+                android:textSize="8dp"/>
+        </TableRow>
+    </TableLayout>
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ondotori_frag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:stretchColumns="3"
+        android:background="@drawable/shape"
+        android:layout_marginLeft="10sp"
+        android:layout_marginRight="10sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginBottom="10sp"
+        android:padding="10sp">
+        <View android:layout_width="match_parent"
+            android:layout_height="5dp" />
+        <TableRow>
+            <TextView
+                android:text="@string/ondotori_avg"
+                style="@style/table_sub_header"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:layout_weight="2"/>
+            <TextView
+                android:text="@string/ondotori_min"
+                style="@style/table_sub_header"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:layout_weight="2"/>
+            <TextView
+                android:text="@string/ondotori_max"
+                style="@style/table_sub_header"
+                android:textAlignment="center"
+                android:padding="5dp"
+                android:layout_weight="2"/>
+            <View android:layout_weight="2" android:layout_height="match_parent"/>
+            <TextView
+                android:text="@string/ondotori_last"
+                style="@style/table_sub_header"
+                android:textAlignment="center"
+                android:paddingRight="5dp"
+                android:layout_weight="4"/>
+            <TextView/>
+            <View android:layout_weight="2" android:layout_height="match_parent"/>
+        </TableRow>
+        <View android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/dark_blue"/>
+        <TableRow>
+            <TextView
+                android:text="@string/ondotori_temp_avg_val"
+                android:textAlignment="center"
+                android:layout_weight="2"/>
+            <TextView
+                android:text="@string/ondotori_temp_min_val"
+                android:textAlignment="center"
+                android:layout_weight="2"/>
+            <TextView
+                android:text="@string/ondotori_temp_max_val"
+                android:textAlignment="center"
+                android:layout_weight="2"/>
+            <TextView
+                android:text="@string/ondotori_temp_last_val"
+                style="@style/Emphasized"
+                android:layout_weight="4"/>
+            <TextView
+                android:text="@string/ondotori_temp_unit"
+                android:textAlignment="center"
+                android:layout_weight="2"/>
+        </TableRow>
+    </TableLayout>
+
+
+    </LinearLayout>
+</ScrollView>
