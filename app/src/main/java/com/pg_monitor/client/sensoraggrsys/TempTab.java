@@ -7,10 +7,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
+import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 /**
  * Created by sunyanan on 1/4/16.
@@ -28,6 +37,9 @@ public class TempTab extends Fragment {
     final private static int ALPHA_BASE=150;
     final private static int MIN_SCALE=0;
     final private static int MAX_SCALE=50;
+    final private static String unit="\u00b0C";
+
+    private FrameLayout frameLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,9 +50,16 @@ public class TempTab extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        frameLayout = new FrameLayout(getActivity());
+
         View rootview = inflater.inflate(R.layout.content_ondotori, container, false);
         TextView title = (TextView)rootview.findViewById(R.id.ondotori_title);
         title.setText(R.string.ondotori_temp);
+        title.setTextColor(getResources().getColor(R.color.temp_title));
+        View line1 = rootview.findViewById(R.id.title_line1);
+        line1.setBackgroundColor(getResources().getColor(R.color.temp_line1));
+        View line2 = rootview.findViewById(R.id.title_line2);
+        line2.setBackgroundColor(getResources().getColor(R.color.temp_line2));
 
         TableLayout ondotori_table = (TableLayout)rootview.findViewById(R.id.ondotori_table);
         ondotori_table.getLayoutParams().width=PIXEL_DIM*TABLE_WIDTH;
@@ -73,15 +92,16 @@ public class TempTab extends Fragment {
                     ondotori_pixel.getBackground().setAlpha(ALPHA_BASE);
                 }else if(cur_value>MAX_SCALE){
                     ondotori_pixel.setBackgroundColor(temp_color_chart.getPixel(chart_width-1, 10));
-                    ondotori_pixel.getBackground().setAlpha(ALPHA_BASE + (cur_value - MAX_SCALE) > (255-ALPHA_BASE) ?(cur_value-MAX_SCALE):(255-ALPHA_BASE));
+                    ondotori_pixel.getBackground().setAlpha(ALPHA_BASE + (((cur_value - MAX_SCALE) > (255-ALPHA_BASE)) ?(cur_value-MAX_SCALE):(255-ALPHA_BASE)));
                 }else if(cur_value!=NO_VAL){
                     ondotori_pixel.setBackgroundColor(temp_color_chart.getPixel(0, 10));
-                    ondotori_pixel.getBackground().setAlpha(ALPHA_BASE + (MIN_SCALE-cur_value) > (255-ALPHA_BASE) ?(MIN_SCALE-cur_value):(255-ALPHA_BASE));
+                    ondotori_pixel.getBackground().setAlpha(ALPHA_BASE + (((MIN_SCALE-cur_value) > (255-ALPHA_BASE)) ?(MIN_SCALE-cur_value):(255-ALPHA_BASE)));
                 }else{
                     ondotori_pixel.setBackgroundColor(temp_color_chart.getPixel(0, 10));
                     ondotori_pixel.getBackground().setAlpha(0);
                 }
                 ondotori_pixel.setLayoutParams(new TableRow.LayoutParams(PIXEL_DIM, PIXEL_DIM));
+                ondotori_pixel.setOnTouchListener(new MyOnTouchListener(getActivity(), "(" + i + "," + j + ")",cur_value, unit,NO_VAL));
                 ondotori_row.addView(ondotori_pixel);
             }
             ondotori_table.addView(ondotori_row,new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
@@ -90,36 +110,73 @@ public class TempTab extends Fragment {
         ImageView scale_chart = (ImageView)rootview.findViewById(R.id.ondotori_scale);
         scale_chart.setImageResource(R.drawable.temp_color_chart);
         TextView min_scale = (TextView)rootview.findViewById(R.id.ondotori_min_scale);
-        min_scale.setText(MIN_SCALE+"");
+        min_scale.setText(MIN_SCALE + unit);
         TextView max_scale = (TextView)rootview.findViewById(R.id.ondotori_max_scale);
-        max_scale.setText(MAX_SCALE+"");
-        return rootview;
+        max_scale.setText(MAX_SCALE + unit);
 
-        /* version 3 tabs
-
-        View rootview = inflater.inflate(R.layout.content_ondotoriv2, container, false);
-        TextView title = (TextView)rootview.findViewById(R.id.ondotori_title);
-        title.setText(R.string.ondotori_temp);
-        final FragmentTabHost mTabHost = (FragmentTabHost)rootview.findViewById(android.R.id.tabhost);
-        mTabHost.setup(getActivity(), getChildFragmentManager(), android.R.id.tabcontent);
+        TextView unit_text_view=(TextView)rootview.findViewById(R.id.ondotori_avg_unit);
+        unit_text_view.setText(unit);
+        unit_text_view=(TextView)rootview.findViewById(R.id.ondotori_min_unit);
+        unit_text_view.setText(unit);
+        unit_text_view=(TextView)rootview.findViewById(R.id.ondotori_max_unit);
+        unit_text_view.setText(unit);
 
 
+        GraphView graph = (GraphView) rootview.findViewById(R.id.graph);
+        DataPoint[] points;
+        LineGraphSeries<DataPoint> series_avg = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 6),
+                new DataPoint(2, 5),
+                new DataPoint(3, 4),
+                new DataPoint(4, 8)
+        });
+        LineGraphSeries<DataPoint> series_min = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
+                new DataPoint(0, 1),
+                new DataPoint(1, 1),
+                new DataPoint(2, -3),
+                new DataPoint(3, 2),
+                new DataPoint(4, 5)
+        });
+        LineGraphSeries<DataPoint> series_max = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
+                new DataPoint(0, 2),
+                new DataPoint(1, 6),
+                new DataPoint(2, 6),
+                new DataPoint(3, 7),
+                new DataPoint(4, 9)
+        });
 
-        mTabHost.addTab(
-                mTabHost.newTabSpec("tab1").setIndicator("Last", null),
-                TempLastTab.class, null);
-        mTabHost.addTab(
-                mTabHost.newTabSpec("tab2").setIndicator("Avg", null),
-                TempLastTab.class, null);
-        mTabHost.addTab(
-                mTabHost.newTabSpec("tab3").setIndicator("Min/Max", null),
-                TempLastTab.class, null);
-        for(int i=0;i<mTabHost.getTabWidget().getChildCount();i++) {
-            mTabHost.getTabWidget().getChildAt(i).getLayoutParams().height = 100;
-        }
-        return rootview;
 
-        */
+
+
+        series_avg.setColor(getResources().getColor(R.color.temp_title));
+        series_avg.setTitle("AVG");
+        series_avg.setThickness(10);
+        series_max.setColor(getResources().getColor(R.color.trans_dark_red));
+        series_max.setTitle("MAX");
+        series_min.setColor(getResources().getColor(R.color.trans_dark_blue));
+        series_min.setTitle("MIN");
+
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Last Hour (min)");
+        graph.getLegendRenderer().setVisible(true);
+
+        graph.addSeries(series_avg);
+        graph.addSeries(series_max);
+        graph.addSeries(series_min);
+
+        series_avg.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                if (MainActivity.sToast != null) {
+                    MainActivity.sToast.cancel();
+                }
+                MainActivity.sToast = Toast.makeText(getActivity(), "AVG: " + dataPoint.getY() + " @Last " + dataPoint.getX() + "minutes", Toast.LENGTH_SHORT);
+                MainActivity.sToast.show();
+            }
+        });
+
+        frameLayout.addView(rootview);
+        return frameLayout;
     }
 
 

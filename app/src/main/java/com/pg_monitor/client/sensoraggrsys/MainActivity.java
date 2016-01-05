@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -17,6 +17,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * The {@link ViewPager} that will display the three primary sections of the app, one at a
      * time.
      */
+    public static Toast sToast=null;
     ViewPager mViewPager;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -179,16 +180,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-    public void resetOptionBackground(){
-        LinearLayout temp_option_layout = (LinearLayout)findViewById(R.id.temp_option_layout);
-        LinearLayout humid_option_layout = (LinearLayout)findViewById(R.id.humid_option_layout);
-        LinearLayout co2_option_layout = (LinearLayout)findViewById(R.id.co2_option_layout);
-        LinearLayout motion_option_layout = (LinearLayout)findViewById(R.id.motion_option_layout);
-        temp_option_layout.setBackgroundColor(getResources().getColor(R.color.soft_blue));
-        humid_option_layout.setBackgroundColor(getResources().getColor(R.color.soft_blue));
-        co2_option_layout.setBackgroundColor(getResources().getColor(R.color.soft_blue));
-        motion_option_layout.setBackgroundColor(getResources().getColor(R.color.soft_blue));
-    }
 
     public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -224,6 +215,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         public CharSequence getPageTitle(int position) {
             return "Section " + (position + 1);
         }
+
     }
 
 

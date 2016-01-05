@@ -12,7 +12,22 @@
     <color name="black">#000000</color>
     <color name="soft_blue">#fbc3eded</color>
     <color name="trans">#00000000</color>
+    <color name="dark_red">#ac3d3d</color>
 
     <color name="trans_red">#a6e47878</color>
+    <color name="trans_dark_red">#80ac3d3d</color>
+    <color name="trans_dark_blue">#80035e7c</color>
+
+
+    <color name="temp_title">#c93939</color>
+    <color name="temp_line1">#7b0606</color>
+    <color name="temp_line2">#f5afaf</color>
+    <color name="humid_title">#1b9fe6</color>
+    <color name="humid_line1">#3237a3</color>
+    <color name="humid_line2">#98d2f1</color>
+    <color name="co2_title">#653ba4</color>
+    <color name="co2_line1">#12593a</color>
+    <color name="co2_line2">#699c77</color>
+
 
 </resources>
