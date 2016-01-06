@@ -3,12 +3,16 @@ package com.pg_monitor.client.sensoraggrsys;
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -23,6 +27,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        new LoadData().execute();
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        new UpdateData().execute();
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 0, LoadData.min_interval);
 
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -76,95 +96,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                         .setTabListener(this));
 
 
-
-/*
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-
-        LinearLayout temp_option_layout = (LinearLayout)findViewById(R.id.temp_option_layout);
-        temp_option_layout.setBackgroundColor(getResources().getColor(R.color.soft_background));
-
-        ImageView temp_option= (ImageView)findViewById(R.id.temp_button);
-        temp_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetOptionBackground();
-                LinearLayout cur_option = (LinearLayout) findViewById(R.id.temp_option_layout);
-                cur_option.setBackgroundColor(getResources().getColor(R.color.soft_background));
-
-
-            }
-        });
-
-        ImageView humid_option= (ImageView)findViewById(R.id.humid_button);
-        humid_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetOptionBackground();
-                LinearLayout cur_option = (LinearLayout)findViewById(R.id.humid_option_layout);
-                cur_option.setBackgroundColor(getResources().getColor(R.color.soft_background));
-
-
-
-            }
-        });
-
-        ImageView co2_option= (ImageView)findViewById(R.id.co2_button);
-        co2_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetOptionBackground();
-                LinearLayout cur_option = (LinearLayout)findViewById(R.id.co2_option_layout);
-                cur_option.setBackgroundColor(getResources().getColor(R.color.soft_background));
-
-
-
-            }
-        });
-
-        ImageView motion_option= (ImageView)findViewById(R.id.motion_button);
-        motion_option.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                resetOptionBackground();
-                LinearLayout cur_option = (LinearLayout)findViewById(R.id.motion_option_layout);
-                cur_option.setBackgroundColor(getResources().getColor(R.color.soft_background));
-
-
-
-            }
-        });
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-        */
     }
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
