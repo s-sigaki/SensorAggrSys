@@ -67,7 +67,7 @@ public class TempTab extends Fragment {
         Bitmap temp_color_chart =  BitmapFactory.decodeResource(getResources(),
                 R.drawable.temp_color_chart);
         chart_width=temp_color_chart.getWidth();
-
+/*
         value = new int[TABLE_WIDTH*TABLE_HEIGHT];
         for(int i=0;i<value.length;i++){
             value[i]=NO_VAL;
@@ -79,6 +79,8 @@ public class TempTab extends Fragment {
         value[5*TABLE_WIDTH]=50;
         value[6*TABLE_WIDTH]=40;
         value[7*TABLE_WIDTH]=30;
+
+        */
         for(int i=0;i<TABLE_HEIGHT;i++){
             TableRow ondotori_row = new TableRow(getActivity());
             ondotori_row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,
@@ -86,7 +88,13 @@ public class TempTab extends Fragment {
             for(int j=0;j<TABLE_WIDTH;j++){
                 View ondotori_pixel=new View(getActivity());
                 ondotori_pixel.setId(TABLE_WIDTH * i + j);
-                int cur_value=value[TABLE_WIDTH*i+j];
+                SensorData cur_sensor=Ondotori.temperature_collection.getSensorAtLocation(i,j);
+                int cur_value;
+                if(cur_sensor==null){
+                    cur_value=NO_VAL;
+                }else{
+                    cur_value=(int)cur_sensor.getValue();
+                }
                 if(cur_value<=MAX_SCALE&&cur_value>=MIN_SCALE) {
                     ondotori_pixel.setBackgroundColor(temp_color_chart.getPixel(cur_value * chart_width / (MAX_SCALE-MIN_SCALE) -1, 10));
                     ondotori_pixel.getBackground().setAlpha(ALPHA_BASE);
@@ -121,8 +129,25 @@ public class TempTab extends Fragment {
         unit_text_view=(TextView)rootview.findViewById(R.id.ondotori_max_unit);
         unit_text_view.setText(unit);
 
+        if(Ondotori.temperature_collection.get_avg_points().length>0) {
+            TextView avg_text_view = (TextView) rootview.findViewById(R.id.ondotori_avg_value);
+            TextView min_text_view = (TextView) rootview.findViewById(R.id.ondotori_min_value);
+            TextView max_text_view = (TextView) rootview.findViewById(R.id.ondotori_max_value);
+            TextView last_update_time_text_view = (TextView) rootview.findViewById(R.id.update_time);
+            if(Ondotori.temperature_collection.getLast_update_time()!=null){
+                avg_text_view.setText(String.format("%.1f", Ondotori.temperature_collection.getCurrentAvg().doubleValue()));
+                min_text_view.setText(String.format("%.1f", Ondotori.temperature_collection.getCurrentMin().doubleValue()));
+                max_text_view.setText(String.format("%.1f", Ondotori.temperature_collection.getCurrentMax().doubleValue()));
+                last_update_time_text_view.setText(Ondotori.temperature_collection.getLast_update_time());
+            }
 
+        }
         GraphView graph = (GraphView) rootview.findViewById(R.id.graph);
+
+        LineGraphSeries<DataPoint> series_avg = new LineGraphSeries<DataPoint>(Ondotori.temperature_collection.get_avg_points());
+        LineGraphSeries<DataPoint> series_min = new LineGraphSeries<DataPoint>(Ondotori.temperature_collection.get_min_points());
+        LineGraphSeries<DataPoint> series_max = new LineGraphSeries<DataPoint>(Ondotori.temperature_collection.get_max_points());
+        /*
         DataPoint[] points;
         LineGraphSeries<DataPoint> series_avg = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
                 new DataPoint(0, 1),
@@ -146,7 +171,7 @@ public class TempTab extends Fragment {
                 new DataPoint(4, 9)
         });
 
-
+*/
 
 
         series_avg.setColor(getResources().getColor(R.color.temp_title));

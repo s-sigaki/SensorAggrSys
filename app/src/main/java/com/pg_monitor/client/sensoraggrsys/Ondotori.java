@@ -7,6 +7,7 @@ public class Ondotori {
     public static final int TEMPERATURE = 0;
     public static final int HUMIDITY = 1;
     public static final int CO2 = 2;
+    public static final int MAX_POINT_NUM = 5;
 
     public static OndotoriCollection temperature_collection=new OndotoriCollection(TEMPERATURE);
     public static OndotoriCollection humidity_collection=new OndotoriCollection(HUMIDITY);

@@ -2,17 +2,17 @@ package com.pg_monitor.client.sensoraggrsys;
 
 import android.app.ActionBar;
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -22,27 +22,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * time.
      */
     public static Toast sToast=null;
+    public static ProgressDialog pDialog;
     ViewPager mViewPager;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        pDialog = new ProgressDialog(this);
+        if(LoadData.upload_time==null){
+            new LoadData().execute();
+        }
+        new UpdateData().execute();
 
-        new LoadData().execute();
 
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        new UpdateData().execute();
-                    }
-                });
-            }
-        };
-        timer.schedule(task, 0, LoadData.min_interval);
+
+
+
+
+
 
         // Create the adapter that will return a fragment for each of the three primary sections
         // of the app.
@@ -148,6 +145,25 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_refresh:
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+                return (true);
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 
 }

@@ -90,6 +90,7 @@
             android:layout_span="3"/>
         <TableRow>
         <TextView
+            android:id="@+id/ondotori_avg_value"
             android:text="@string/default_val"
             style="@style/Emphasized"
             android:textAlignment="center"
@@ -107,6 +108,7 @@
             android:layout_span="3"/>
         <TableRow>
             <TextView
+                android:id="@+id/ondotori_max_value"
                 android:text="@string/default_val"
                 android:textColor="@color/dark_red"
                 android:textSize="15dp"
@@ -127,6 +129,7 @@
             android:layout_span="3"/>
         <TableRow>
             <TextView
+                android:id="@+id/ondotori_min_value"
                 android:text="@string/default_val"
                 android:textColor="@color/dark_blue"
                 android:textSize="15dp"
