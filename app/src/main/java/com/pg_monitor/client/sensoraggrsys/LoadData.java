@@ -141,6 +141,7 @@ public class LoadData extends AsyncTask<String, String, String> {
     protected void onPostExecute(String file_url){
        MainActivity.pDialog.dismiss();
         new UpdateData().execute();
+
     }
 
 }

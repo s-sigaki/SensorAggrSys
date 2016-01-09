@@ -43,11 +43,16 @@ public class SensorData {
 
 
     public boolean isOnLocation(int x,int y){
-        Location location = LoadData.id_location_map.get(id.getBase_serial()+"_"+id.getRemote_serial());
+        Location location = MainActivity.id_location_map.get(id.getBase_serial()+"_"+id.getRemote_serial());
         if(location == null){
             Log.d("Sensor data", "Location null:" + id.getBase_serial() + "_" + id.getRemote_serial());
         }
         return (x==location.getX()) && (y==location.getY());
+    }
+
+    public Location getLocation(){
+        Location location = MainActivity.id_location_map.get(id.getBase_serial()+"_"+id.getRemote_serial());
+        return location;
     }
 
     public boolean isDevice(SensorData sensordata){

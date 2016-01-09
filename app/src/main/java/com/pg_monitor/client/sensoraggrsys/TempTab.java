@@ -21,6 +21,11 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.Series;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Created by sunyanan on 1/4/16.
  */
@@ -31,7 +36,6 @@ public class TempTab extends Fragment {
     final public static int PIXEL_DIM=75;
 
 
-    private int[] value;
     private int chart_width;
     final private static int NO_VAL=-99;
     final private static int ALPHA_BASE=150;
@@ -67,20 +71,6 @@ public class TempTab extends Fragment {
         Bitmap temp_color_chart =  BitmapFactory.decodeResource(getResources(),
                 R.drawable.temp_color_chart);
         chart_width=temp_color_chart.getWidth();
-/*
-        value = new int[TABLE_WIDTH*TABLE_HEIGHT];
-        for(int i=0;i<value.length;i++){
-            value[i]=NO_VAL;
-        }
-        value[2*TABLE_WIDTH]=-10;
-        value[2*TABLE_WIDTH+1]=15;
-        value[3*TABLE_WIDTH]=20;
-        value[4*TABLE_WIDTH]=100;
-        value[5*TABLE_WIDTH]=50;
-        value[6*TABLE_WIDTH]=40;
-        value[7*TABLE_WIDTH]=30;
-
-        */
         for(int i=0;i<TABLE_HEIGHT;i++){
             TableRow ondotori_row = new TableRow(getActivity());
             ondotori_row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,
@@ -109,7 +99,9 @@ public class TempTab extends Fragment {
                     ondotori_pixel.getBackground().setAlpha(0);
                 }
                 ondotori_pixel.setLayoutParams(new TableRow.LayoutParams(PIXEL_DIM, PIXEL_DIM));
-                ondotori_pixel.setOnTouchListener(new MyOnTouchListener(getActivity(), "(" + i + "," + j + ")",cur_value, unit,NO_VAL));
+                if(cur_sensor!=null) {
+                    ondotori_pixel.setOnTouchListener(new MyOnTouchListener(getActivity(), cur_sensor.getLocation().getName(), cur_value, unit, NO_VAL));
+                }
                 ondotori_row.addView(ondotori_pixel);
             }
             ondotori_table.addView(ondotori_row,new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT, TableLayout.LayoutParams.WRAP_CONTENT));
@@ -195,7 +187,11 @@ public class TempTab extends Fragment {
                 if (MainActivity.sToast != null) {
                     MainActivity.sToast.cancel();
                 }
-                MainActivity.sToast = Toast.makeText(getActivity(), "AVG: " + dataPoint.getY() + " @Last " + dataPoint.getX() + "minutes", Toast.LENGTH_SHORT);
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date today = Calendar.getInstance().getTime();
+
+                String reportDate = DateStrCal.sub_sec_time(df.format(today), (int)dataPoint.getX() * MainActivity.min_interval);
+                MainActivity.sToast = Toast.makeText(getActivity(), "AVG: " + String.format("%.1f", dataPoint.getY()) + " @" + reportDate, Toast.LENGTH_SHORT);
                 MainActivity.sToast.show();
             }
         });

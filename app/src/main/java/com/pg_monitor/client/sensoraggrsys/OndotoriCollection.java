@@ -158,7 +158,7 @@ public class OndotoriCollection {
         try {
             if (getLast_update_time() == null) {
 
-                return URLEncoder.encode(getStart_time(), "UTF-8");
+                return URLEncoder.encode(DateStrCal.sub_sec_time(getStart_time(),MainActivity.min_interval), "UTF-8");
 
             } else {
                 return URLEncoder.encode(getLast_update_time(), "UTF-8");

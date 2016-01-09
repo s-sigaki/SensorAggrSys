@@ -13,13 +13,13 @@ public class MyOnTouchListener implements View.OnTouchListener
 {
 
     FragmentActivity activity;
-    String device_id;
+    String location_name;
     double value;
     double null_value;
     String unit;
-    public MyOnTouchListener (FragmentActivity in_activity,String in_device_id,double in_value,String in_unit,double in_null_value) {
+    public MyOnTouchListener (FragmentActivity in_activity,String in_location_name,double in_value,String in_unit,double in_null_value) {
         this.activity=in_activity;
-        this.device_id=in_device_id;
+        this.location_name=in_location_name;
         this.value=in_value;
         this.unit=in_unit;
         this.null_value=in_null_value;
@@ -33,7 +33,7 @@ public class MyOnTouchListener implements View.OnTouchListener
             MainActivity.sToast=null;
             return false;
         }
-        MainActivity.sToast=Toast.makeText(activity,device_id+":"+value+unit,Toast.LENGTH_LONG);
+        MainActivity.sToast=Toast.makeText(activity,location_name+":"+value+unit,Toast.LENGTH_LONG);
         MainActivity.sToast.setGravity(Gravity.CENTER,0,0);
         MainActivity.sToast.show();
 

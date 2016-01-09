@@ -36,10 +36,9 @@ public class UpdateData extends AsyncTask<String, String, String> {
     private static final String TAG_LAST_UPDATE_TIME = "last_update_time";
 
 
-    protected void onPreExecute() {
+    protected void onPreExecute(){
         super.onPreExecute();
     }
-
     protected String doInBackground(String... args) {
 
         List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -53,7 +52,7 @@ public class UpdateData extends AsyncTask<String, String, String> {
 
 
 
-        String url_update = base_url_update+"?last_temp_time=\'"+temp_last_time+"\'&last_humid_time=\'"+humid_last_time+"'&last_co2_time=\'"+co2_last_time+"\'";
+        String url_update = base_url_update+"?last_temp_time=\'"+temp_last_time+"\'&last_humid_time=\'"+humid_last_time+"'&last_co2_time=\'"+co2_last_time+"\'&dump=0";
 
         Log.d("URL",url_update);
         JSONObject json = jParser.makeHttpRequest(url_update, "GET", params);
@@ -97,20 +96,20 @@ public class UpdateData extends AsyncTask<String, String, String> {
             double avg=detail_obj.getDouble(TAG_AVG);
             double min=detail_obj.getDouble(TAG_MIN);
             double max=detail_obj.getDouble(TAG_MAX);
-            String last_update_time=detail_obj.getString(TAG_LAST_UPDATE_TIME);
+             String last_update_time=detail_obj.getString(TAG_LAST_UPDATE_TIME);
 
             switch (type) {
                 case Ondotori.TEMPERATURE:
                     Ondotori.temperature_collection.updateSensorList(sensor_data_list);
-                    Ondotori.temperature_collection.updateDataPoint(avg, min, max, last_update_time);
+                    Ondotori.temperature_collection.updateDataPoint(avg, min, max,last_update_time);
                     break;
                 case Ondotori.HUMIDITY:
                     Ondotori.humidity_collection.updateSensorList(sensor_data_list);
-                    Ondotori.humidity_collection.updateDataPoint(avg, min, max, last_update_time);
+                    Ondotori.humidity_collection.updateDataPoint(avg, min,max, last_update_time);
                     break;
                 case Ondotori.CO2:
                     Ondotori.co2_collection.updateSensorList(sensor_data_list);
-                    Ondotori.co2_collection.updateDataPoint(avg, min, max, last_update_time);
+                    Ondotori.co2_collection.updateDataPoint(avg, min, max,last_update_time);
                     break;
             }
 
@@ -120,4 +119,6 @@ public class UpdateData extends AsyncTask<String, String, String> {
         }
 
     }
+
+
 }
