@@ -134,7 +134,7 @@ public class HumidTab extends Fragment {
                 avg_text_view.setText(String.format("%.1f", Ondotori.humidity_collection.getCurrentAvg().doubleValue()));
                 min_text_view.setText(String.format("%.1f", Ondotori.humidity_collection.getCurrentMin().doubleValue()));
                 max_text_view.setText(String.format("%.1f", Ondotori.humidity_collection.getCurrentMax().doubleValue()));
-                last_update_time_text_view.setText(Ondotori.humidity_collection.getLast_update_time());
+                last_update_time_text_view.setText(DateStrCal.yMdhmsTohmsdMy(Ondotori.humidity_collection.getLast_update_time()));
             }
 
         }
@@ -143,31 +143,6 @@ public class HumidTab extends Fragment {
         LineGraphSeries<DataPoint> series_avg = new LineGraphSeries<DataPoint>(Ondotori.humidity_collection.get_avg_points());
         LineGraphSeries<DataPoint> series_min = new LineGraphSeries<DataPoint>(Ondotori.humidity_collection.get_min_points());
         LineGraphSeries<DataPoint> series_max = new LineGraphSeries<DataPoint>(Ondotori.humidity_collection.get_max_points());
-        /*
-        DataPoint[] points;
-        LineGraphSeries<DataPoint> series_avg = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 6),
-                new DataPoint(2, 5),
-                new DataPoint(3, 4),
-                new DataPoint(4, 8)
-        });
-        LineGraphSeries<DataPoint> series_min = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 1),
-                new DataPoint(2, -3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 5)
-        });
-        LineGraphSeries<DataPoint> series_max = new LineGraphSeries<DataPoint>(points=new DataPoint[] {
-                new DataPoint(0, 2),
-                new DataPoint(1, 6),
-                new DataPoint(2, 6),
-                new DataPoint(3, 7),
-                new DataPoint(4, 9)
-        });
-
-*/
 
 
         series_avg.setColor(getResources().getColor(R.color.humid_title));
@@ -178,8 +153,13 @@ public class HumidTab extends Fragment {
         series_min.setColor(getResources().getColor(R.color.trans_dark_blue));
         series_min.setTitle("MIN");
 
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Last Hour (min)");
-        graph.getLegendRenderer().setVisible(true);
+        if(Ondotori.humidity_collection.diffTime()==null){
+            graph.getGridLabelRenderer().setHorizontalAxisTitle("No historical data");
+            graph.getLegendRenderer().setVisible(true);
+        }else{
+            graph.getGridLabelRenderer().setHorizontalAxisTitle("Last "+Ondotori.humidity_collection.diffTime()+" (every "+DateStrCal.secondsToString(MainActivity.min_interval)+")");
+            graph.getLegendRenderer().setVisible(true);
+        }
 
         graph.addSeries(series_avg);
         graph.addSeries(series_max);
@@ -194,8 +174,9 @@ public class HumidTab extends Fragment {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date today = Calendar.getInstance().getTime();
 
-                String reportDate = DateStrCal.sub_sec_time(df.format(today), (int) dataPoint.getX() * MainActivity.min_interval);
-                MainActivity.sToast = Toast.makeText(getActivity(), "AVG: " + String.format("%.1f", dataPoint.getY()) + " @" + reportDate, Toast.LENGTH_SHORT);
+                String reportDate = DateStrCal.sub_sec_time(Ondotori.humidity_collection.getLast_update_time(), (int)dataPoint.getX() * MainActivity.min_interval);
+                reportDate = DateStrCal.yMdhmsTohmsdMy(reportDate);
+                MainActivity.sToast = Toast.makeText(getActivity(), " @" + reportDate+"\n"+"AVG = " + String.format("%.1f", dataPoint.getY()), Toast.LENGTH_SHORT);
                 MainActivity.sToast.show();
             }
         });

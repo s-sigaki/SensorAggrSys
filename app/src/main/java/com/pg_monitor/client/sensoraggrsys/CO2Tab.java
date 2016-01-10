@@ -100,7 +100,7 @@ public class CO2Tab extends Fragment {
                 }
                 ondotori_pixel.setLayoutParams(new TableRow.LayoutParams(PIXEL_DIM, PIXEL_DIM));
                 if(cur_sensor!=null) {
-                    ondotori_pixel.setOnTouchListener(new MyOnTouchListener(getActivity(), cur_sensor.getLocation().getName(), (int)cur_value, unit, NO_VAL));
+                    ondotori_pixel.setOnTouchListener(new MyOnTouchListener(getActivity(), cur_sensor.getLocation().getName(), cur_value, unit, NO_VAL));
                 }
                 ondotori_row.addView(ondotori_pixel);
             }
@@ -130,7 +130,7 @@ public class CO2Tab extends Fragment {
                 avg_text_view.setText(""+(int)Ondotori.co2_collection.getCurrentAvg().doubleValue());
                 min_text_view.setText(""+(int)Ondotori.co2_collection.getCurrentMin().doubleValue());
                 max_text_view.setText(""+(int)Ondotori.co2_collection.getCurrentMax().doubleValue());
-                last_update_time_text_view.setText(Ondotori.co2_collection.getLast_update_time());
+                last_update_time_text_view.setText(DateStrCal.yMdhmsTohmsdMy(Ondotori.co2_collection.getLast_update_time()));
             }
 
         }
@@ -149,8 +149,13 @@ public class CO2Tab extends Fragment {
         series_min.setColor(getResources().getColor(R.color.trans_dark_blue));
         series_min.setTitle("MIN");
 
-        graph.getGridLabelRenderer().setHorizontalAxisTitle("Last Hour (min)");
-        graph.getLegendRenderer().setVisible(true);
+        if(Ondotori.co2_collection.diffTime()==null){
+            graph.getGridLabelRenderer().setHorizontalAxisTitle("No historical data");
+            graph.getLegendRenderer().setVisible(true);
+        }else{
+            graph.getGridLabelRenderer().setHorizontalAxisTitle("Last "+Ondotori.co2_collection.diffTime()+" (every "+DateStrCal.secondsToString(MainActivity.min_interval)+")");
+            graph.getLegendRenderer().setVisible(true);
+        }
 
         graph.addSeries(series_avg);
         graph.addSeries(series_max);
@@ -165,8 +170,9 @@ public class CO2Tab extends Fragment {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 Date today = Calendar.getInstance().getTime();
 
-                String reportDate = DateStrCal.sub_sec_time(df.format(today), (int) dataPoint.getX() * MainActivity.min_interval);
-                MainActivity.sToast = Toast.makeText(getActivity(), "AVG: " + (int)dataPoint.getY() + " @" + reportDate, Toast.LENGTH_SHORT);
+                String reportDate = DateStrCal.sub_sec_time(Ondotori.co2_collection.getLast_update_time(), (int)dataPoint.getX() * MainActivity.min_interval);
+                reportDate = DateStrCal.yMdhmsTohmsdMy(reportDate);
+                MainActivity.sToast = Toast.makeText(getActivity(), " @" + reportDate+"\n"+"AVG = " + (int)dataPoint.getY(), Toast.LENGTH_SHORT);
                 MainActivity.sToast.show();
             }
         });

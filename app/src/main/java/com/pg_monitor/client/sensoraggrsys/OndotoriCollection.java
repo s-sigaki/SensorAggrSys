@@ -169,5 +169,17 @@ public class OndotoriCollection {
         return null;
     }
 
+    public String diffTime(){
+        if(MainActivity.min_interval!=-1&&avg_points.size()>1) {
+            String index0_time = start_time;
+            if(last_update_time!=null){
+                index0_time = last_update_time;
+            }
+            String last_date_time_str = DateStrCal.sub_sec_time(index0_time, (avg_points.size() - 1) * MainActivity.min_interval);
+            return DateStrCal.sub_date(index0_time,last_date_time_str);
+        }
+        return null;
+
+    }
 
 }

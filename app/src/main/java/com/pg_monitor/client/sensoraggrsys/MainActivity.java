@@ -28,7 +28,7 @@ import java.util.List;
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
     public static String upload_time=null;
-    public static int min_interval;
+    public static int min_interval=-1;
 
     public static HashMap<String,Location> id_location_map=new HashMap<String,Location>();
 

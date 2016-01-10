@@ -1,5 +1,9 @@
 package com.pg_monitor.client.sensoraggrsys;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by sunyanan on 1/9/16.
  */
@@ -96,6 +100,80 @@ public class DateStrCal {
     {
         // calculate number of days in a month
         return month == 2 ? ((year%4==0) ? 28 : ((year%100==0)? 29 : ((year%400==0) ? 28 : 29))) : (((month - 1) % 7 % 2 ==0)? 30 : 31);
+    }
+
+
+    public static String sub_date(String date_time_str,String sub_date_time_str) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String result="";
+        try {
+            Date date_time1 = format.parse(date_time_str);
+            Date date_time2 = format.parse(sub_date_time_str);
+            //in milliseconds
+            long diff = date_time1.getTime() - date_time2.getTime();
+            long diffSeconds = diff / 1000 % 60;
+            long diffMinutes = diff / (60 * 1000) % 60;
+            long diffHours = diff / (60 * 60 * 1000) % 24;
+            long diffDays = diff / (24 * 60 * 60 * 1000);
+            if(diffDays>0){
+                result+=diffDays+" day";
+                if(diffDays>1) result+="s";
+            }
+            if(diffHours>0){
+                result+=" "+diffHours+" hour";
+                if(diffHours>1) result+="s";
+            }
+            if(diffMinutes>0){
+                result+=" "+diffMinutes+" minute";
+                if(diffMinutes>1) result+="s";
+            }
+            if(diffSeconds>0){
+                result+=" "+diffSeconds+" seconds";
+                if(diffSeconds>1) result+="s";
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public static String secondsToString(int seconds){
+        String result="";
+        long out_sec = seconds % 60;
+        long out_min = seconds / (60 ) % 60;
+        long out_hour = seconds / (60 * 60 ) % 24;
+        long out_day = seconds / (24 * 60 * 60 );
+        if(out_day>0){
+            result+=out_day+" day";
+            if(out_day>1) result+="s";
+        }
+        if(out_hour>0){
+            result+=" "+out_hour+" hour";
+            if(out_hour>1) result+="s";
+        }
+        if(out_min>0){
+            result+=" "+out_min+" minute";
+            if(out_min>1) result+="s";
+        }
+        if(out_sec>0){
+            result+=" "+out_sec+" seconds";
+            if(out_sec>1) result+="s";
+        }
+        return result;
+    }
+
+    public static String yMdhmsTohmsdMy(String yMdhms){
+        SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format2 = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        try {
+            Date date_time = format1.parse(yMdhms);
+            return format2.format(date_time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+return "";
     }
 }
 

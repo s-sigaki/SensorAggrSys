@@ -33,7 +33,7 @@ public class MyOnTouchListener implements View.OnTouchListener
             MainActivity.sToast=null;
             return false;
         }
-        MainActivity.sToast=Toast.makeText(activity,location_name+":"+value+unit,Toast.LENGTH_LONG);
+        MainActivity.sToast=Toast.makeText(activity,location_name+"\n"+value+unit,Toast.LENGTH_LONG);
         MainActivity.sToast.setGravity(Gravity.CENTER,0,0);
         MainActivity.sToast.show();
 
