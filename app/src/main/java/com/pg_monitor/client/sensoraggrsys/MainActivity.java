@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -35,6 +36,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     private static String url_construct= "http://52.69.84.252/ondotori_load_data.php";
     private static String base_url_update = "http://52.69.84.252/ondotori_update_data.php";
 
+    public static int mInterval = 6000000; // 10 minutes by default, can be changed later
+    public static Handler mHandler;
+
     AppSectionsPagerAdapter mAppSectionsPagerAdapter;
     /**
      * The {@link ViewPager} that will display the three primary sections of the app, one at a
@@ -50,7 +54,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         pDialog = new ProgressDialog(this);
         if(MainActivity.upload_time==null){
             new LoadData_in().execute();
+            mHandler = new Handler();
+            startRepeatingTask();
         }
+
 
 
         // Create the adapter that will return a fragment for each of the three primary sections
@@ -220,8 +227,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
                 if(success == 1){
 
-                    upload_time=json.getString(TAG_UPLOAD_TIME);
+                    upload_time = json.getString(TAG_UPLOAD_TIME);
                     min_interval=json.getInt(TAG_MIN_INTERVAL);
+                    mInterval = min_interval*1000;
 
                     JSONObject last_records=json.getJSONObject(LAST_RECORD);
                     JSONObject last_record_obj=last_records.getJSONObject(TAG_TEMPERATURE);
@@ -410,6 +418,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             MainActivity.pDialog.dismiss();
         }
 
+    }
+
+    Runnable mStatusChecker = new Runnable() {
+        @Override
+        public void run() {
+            new UpdateData_in().execute();
+            mHandler.postDelayed(mStatusChecker, mInterval);
+        }
+    };
+
+    void startRepeatingTask() {
+        mStatusChecker.run();
+    }
+
+    void stopRepeatingTask() {
+        mHandler.removeCallbacks(mStatusChecker);
     }
 
 }
